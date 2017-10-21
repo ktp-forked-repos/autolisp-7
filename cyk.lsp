@@ -5,7 +5,8 @@
 (atan (/ gou gu)))
 
 (defun c:cyk (/ ang-0 ang l1 l2 r1 r2 p0 p1 p2 p3 p4 p5 p6)
-  ;画长圆孔
+;;画长圆孔
+;;长圆孔-圆切直 （以长轴为直径画圆，然后作两平行玄，距离是短轴尺寸）
   (setvar "cmdecho" 0)
   (setq os (getvar "osmode"))
   (setvar "osmode" 0)
