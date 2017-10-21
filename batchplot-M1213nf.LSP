@@ -115,7 +115,7 @@
     )
     
     (setq num (1+ num))
-    (command "delay" 600) ;—”≥Ÿ0.6√Î÷”
+    (command "delay" 500) ;—”≥Ÿ0.5√Î÷”
   )
   (princ (strcat "π≤¥Ú”°¡À" (rtos num) "’≈Õº÷Ω"))
   (setvar "osmode" osmode)		;ª÷∏¥≤∂ªÒ…Ë÷√
