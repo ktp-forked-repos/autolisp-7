@@ -1,5 +1,5 @@
 (defun c:copy-layout (/ layout-name n)
-  ;命令copy-layout，快速复制同一布局多次
+;;;命令copy-layout，快速复制同一布局多次
   (setvar "cmdecho" 0)
   (setq layout-name (getstring "输入要复制的布局名称<a4y>:")
         n (getint "输入要复制的布局数量:"))
