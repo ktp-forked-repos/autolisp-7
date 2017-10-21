@@ -1,5 +1,6 @@
 (defun c:ccyk (/ po dx dy dx/2 dy/2)
-  ;多段线画长圆孔
+;;多段线画长圆孔
+;;长圆孔-多段线（类似solidworks中的槽口）
 (setq p0 (getpoint "输入圆心点")
       dx (getreal "输入X轴距离")
       dy (getreal "输入Y轴距离"))
