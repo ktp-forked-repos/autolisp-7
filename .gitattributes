@@ -1,2 +1,2 @@
-*.LSP linguist-language=Emacs Lisp
-*.lsp linguist-language=Emacs Lisp
+*.LSP linguist-language=Auto Lisp
+*.lsp linguist-language=Auto Lisp
