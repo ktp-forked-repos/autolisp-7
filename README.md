@@ -24,6 +24,7 @@
 - skck-mirror.LSP  由CAD图纸手工生成数控冲床加工代码， 镜像对称时用
 - steel.dcl     sweight.LSP的DCL文件
 - steelweight-reg6.LSP   计算几种型钢重量， 利用了正则表达式实现对输入语句的合法性校验
+- swr.VLX   steelweight-reg6.LSP编译过的二进制文件
 - sum-length.lsp   计算选中的线段总长度
 - sweight.LSP   计算三种钢材重量 使用DCL对话框
 - szz.LSP   由CAD图纸手工生成数控三轴钻钻孔CNC代码
