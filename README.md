@@ -8,6 +8,7 @@
 ![sample](./img/sample.png)
 
 # 目录
+- batchplot.LSP  目前使用的程序。默认使用 HP M701打印机
 - batchplot-M1213nf.LSP    在HP M1213上自动批量打印, 需把图框设定为特
   定块名.
 - batchplot-pdf.LSP    自动打印为pdf文件. 不过还有bug.
@@ -19,6 +20,9 @@
 - hengjia.LSP  快速简易画桁架（除腹杆以外）
 - itoc(数字转换成汉字).lsp   将数字 ‘0～9’ 转为汉字 ‘零～九’
 - lname.LSP    在布局空间，获取标题栏图名， 赋值给布局选项卡名
+- plot-M701.lsp
+- plot-monochrome.lsp
+- plot-pdf.lsp
 - rzl.lsp   计算人字梁长度
 - skck.LSP   由CAD图纸手工生成数控冲床加工代码
 - skck-mirror.LSP  由CAD图纸手工生成数控冲床加工代码， 镜像对称时用
