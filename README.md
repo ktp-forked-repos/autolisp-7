@@ -20,6 +20,7 @@
 - hengjia.LSP  快速简易画桁架（除腹杆以外）
 - itoc(数字转换成汉字).lsp   将数字 ‘0～9’ 转为汉字 ‘零～九’
 - lname.LSP    在布局空间，获取标题栏图名， 赋值给布局选项卡名
+- osmode.LSP 快速恢复对象捕获设置
 - plot-M701.lsp
 - plot-monochrome.lsp
 - plot-pdf.lsp
