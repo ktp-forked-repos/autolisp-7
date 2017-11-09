@@ -11,7 +11,7 @@
 - batchplot.LSP  目前使用的程序。默认使用 HP M701打印机
 - batchplot-M1213nf.LSP    在HP M1213上自动批量打印, 需把图框设定为特
   定块名.
-- batchplot-pdf.LSP    自动打印为pdf文件. 不过还有bug.
+- block-name-clipbrd.LSP   将选择的图块的名字复制到windows的剪贴板，使用了doslib库
 - ccyk.lsp    长圆孔-多段线（类似solidworks中的槽口）
 - copy-layout.lsp  复制布局
 - cyk.lsp    长圆孔-圆切直 （以长轴为直径画圆，然后作两平行玄，距离是短轴尺寸）
@@ -23,7 +23,8 @@
 - osmode.LSP 快速恢复对象捕获设置
 - plot-M701.lsp
 - plot-monochrome.lsp
-- plot-pdf.lsp
+- plot2pdf.LSP 将图框（特定的图块）范围内图纸打印输出成pdf文件，放在同目录下
+- plot-pdf.lsp 没有图框时打印成pdf
 - rzl.lsp   计算人字梁长度
 - skck.LSP   由CAD图纸手工生成数控冲床加工代码
 - skck-mirror.LSP  由CAD图纸手工生成数控冲床加工代码， 镜像对称时用
