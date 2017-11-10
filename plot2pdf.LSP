@@ -136,8 +136,10 @@
 	   (strcat (getvar "DWGPREFIX")	;当前文档路径
 		   (strcat pdf-filename	;图名
 			   "_"
-			   (substr (getvar "DWGNAME") 1 3)
-					;CAD文档名前3个字符
+			   ;(substr (getvar "DWGNAME") 1 3)
+					;CAD文档名前3个字符，如果是中文会乱码
+			   (car (regex-extract "^.{3}" (getvar "DWGNAME") "ig"))
+;使用了正则表达式提取文档名前3个字符，可以处理中文
 			   "_"
 			   (substr (rtos (getvar "cdate") 2 6) 5 4)))
 					;输出的pdf文件名:图名-CAD文件名前3位-生成日期时间
@@ -170,6 +172,38 @@
   (if (/= paper-num "图号")		;如果有特定图号,返回 图号-图名,否则单独返回 图名
     (strcat paper-num "-" paper-name)
     paper-name))
+
+(defun regex-extract (pat str key / regex S tmp str1)
+  ;; 提取正则表达式匹配到的内容
+  ;; pat 正则表达式 str 字符串 
+  ;; pat 中 \ 使用 \\
+  ;; key "igm" i(Ignorecase)忽略大小写 g (Global)全局匹配 m (Multili) 多行模式
+  ;; 注意：一般使用全局匹配 g
+  ;; 可组合使用或单独使用 或置空 ""
+  (vl-load-com)
+  (setq regex (vlax-create-object "Vbscript.RegExp")) ;引用正则表达式控件
+  (if (wcmatch key "*i*,*I*")
+    (vlax-put-property regex "IgnoreCase" 1) ;忽略大小写
+    (vlax-put-property regex "IgnoreCase" 0) ;不忽略大小写
+    )
+  (if (wcmatch key "*g*,*G*")
+    (vlax-put-property regex "Global" 1) ;匹配方式，全文字匹配
+    (vlax-put-property regex "Global" 0)
+    )
+  (if (wcmatch key "*m*,*M*")
+    (vlax-put-property regex "Multiline" 1) ;多行模式
+    (vlax-put-property regex "Multiline" 0)
+    )
+  (vlax-put-property regex "Pattern" pat)
+  (setq s (vlax-invoke-method regex "Execute" str))
+  ;;将规则运用到STR字符，得到提取出的文字内容
+  (VLAX-FOR tmp s                       ;遍历集合对象
+    (setq str1 (cons (vlax-get-property tmp "value") str1))
+    )
+  ;;将内容转换为LISP语言就可以直接观察了
+  (vlax-release-object regex)
+  (REVERSE str1)
+  )
 
 
 
