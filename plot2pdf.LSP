@@ -170,7 +170,7 @@
 			       block-attr-list)
 			  'TextString))
   (if (/= paper-num "图号")		;如果有特定图号,返回 图号-图名,否则单独返回 图名
-    (strcat paper-num "-" paper-name)
+    (strcat paper-num "#" paper-name)   ;使用#分割图号 图名
     paper-name))
 
 (defun regex-extract (pat str key / regex S tmp str1)

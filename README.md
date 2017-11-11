@@ -9,8 +9,7 @@
 
 # 目录
 - batchplot.LSP  目前使用的程序。默认使用 HP M701打印机
-- batchplot-M1213nf.LSP    在HP M1213上自动批量打印, 需把图框设定为特
-  定块名.
+- batchplot-M1213nf.LSP    在HP M1213上自动批量打印, 需把图框设定为特定块名， 如paper-a4x.dwg.
 - block-name-clipbrd.LSP   将选择的图块的名字复制到windows的剪贴板，使用了doslib库
 - ccyk.lsp    长圆孔-多段线（类似solidworks中的槽口）
 - copy-layout.lsp  复制布局
@@ -21,8 +20,8 @@
 - itoc(数字转换成汉字).lsp   将数字 ‘0～9’ 转为汉字 ‘零～九’
 - lname.LSP    在布局空间，获取标题栏图名， 赋值给布局选项卡名
 - osmode.LSP 快速恢复对象捕获设置
-- plot-M701.lsp
-- plot-monochrome.lsp
+- plot-M701.lsp 在HP M701打印无图框图纸
+- plot-monochrome.lsp 以monochrome样式打印图纸
 - plot2pdf.LSP 将图框（特定的图块）范围内图纸打印输出成pdf文件，放在同目录下
 - plot-pdf.lsp 没有图框时打印成pdf
 - rzl.lsp   计算人字梁长度
@@ -40,3 +39,9 @@
 - wjl.lsp  根据屋脊跨度，几字钢屋架长度计算
 - xuhaoqiu-r.lsp  生成序号球，自定义编号起始号码
 - zw.LSP  根据给定参数，生成轴网
+- 标题栏.dwg 非国标标题栏图块 公司名称已删去，不影响使用。
+- paper-a3x.dwg  非国标A3横幅图框图块
+- paper-a4x.dwg  非国标A4横幅图框图块
+- paper-a4y.dwg  非国标A4竖幅图框图块
+
+**使用时，需把本目录列入cad受信任的位置。**
