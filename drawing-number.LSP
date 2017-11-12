@@ -19,12 +19,13 @@
   )
   (princ "请选择进行图号编辑的图纸框，建议以栏选方式（F）")
   (setq ss (ssget '((2 . "标题栏"))))	;ss是标题栏图快的选择集
+  (setq ss-list (ssget2list-reverse-wc ss))
   (setq num 0)
-  (repeat (sslength ss)
+  (repeat (length ss-list)
     (setq biaotilan-attr		;取得标题栏图快属性列表，赋值给biaotilan-attr
 	   (vlax-safeArray->list
 	     (vlax-variant-value
-	       (vla-getattributes (vlax-ename->vla-object (ssname ss num)))
+	       (vla-getattributes (vlax-ename->vla-object (nth num ss-list)))
 	     )
 	   )
     )
@@ -32,7 +33,7 @@
       (nth 3				;图号是标题栏的第4个属性
 	   biaotilan-attr
       )					; 获取”图号“这个属性的图元
-      (strcat drawing-prefix (rtos drawing-no 2)) ; 图号值：前缀-编号
+      (strcat drawing-prefix (itoa-add0 drawing-no)) ; 图号值：前缀编号 自定义函数itoa-add0, 对个位数前导补0
     )
     (if	(not (= "" project-name))	; 修改项目名称 第5个属性
       (vla-put-TextString (nth 4 biaotilan-attr) project-name)
@@ -49,6 +50,34 @@
   (princ (strcat "一共编辑了" (rtos num) "个标题栏。"))
   (princ)
 )
+
+
+(defun itoa-add0 (n)
+  ;;整数转字符串
+  ;;对1-9个位数前导补0, 变为"01" "02"
+  ;;10以上整数转为默认字符串格式
+  (if (and (< n 10) (> n 0))
+    (strcat "0" (itoa n))
+    (itoa n)))
+
+(defun ssget2list-reverse-wc (ss / ss-list num ss-selid)
+  ;;将选择集图元组成列表, 其中
+  ;;如果选择集第一个图元是以窗口w或交叉c方式被选中
+  ;;则默认整个选择集都是以此种方式被选中
+  ;;则倒转此选择集内的图元次序, 否则不倒转
+  ;;窗口w或交叉c方式下, 第一个图元位于右下角,
+  (setq num 0
+        ss-list nil)
+  (repeat (sslength ss)
+    (setq ss-list (cons (ssname ss num) ss-list)
+          num (1+ num)))
+  (setq ss-selid (caar (ssnamex ss)))
+  (if (or (= ss-selid 2)
+          (= ss-selid 3))
+    ss-list
+    (reverse ss-list)))
+  
+
 
 
 ;;;(defun block-attributes	(block attr-name attr-value / lstAttrs attr)
