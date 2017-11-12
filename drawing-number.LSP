@@ -1,12 +1,14 @@
-(defun c:dn (/		    osmode	   drawing-prefix
+;;; 配合标题栏图块, 批量添加或修改图号, 适合图号不大于99
+;;; 对个位数图号前导补0, 如果图号大于99, 数位对不齐
+;;; 2017.11.12
+(defun c:dn (/	   drawing-prefix
 	     drawing-no	    ss		   num
 	     biaotilan-attr project-name   project-num
 	    )
   ;;对标题栏图快进行图号编辑
   ;;drawing-prefix 图号前缀 drawing-no 图号起始编号
   ;;统一修改 标题栏 项目名称 项目编号 
-;;;  (setq osmode (getvar "osmode"))	;保存捕获设置
-;;;  (setvar "osmode" 0)			;取消捕获
+
   (initget)
   (setq	drawing-prefix (getstring "请输入图号前缀：")
 	drawing-no     (getint "请输入图号起始编号<默认是1>：")
@@ -14,9 +16,9 @@
   (if (not drawing-no)
     (setq drawing-no 1)
   )
-  (setq	project-name (getstring "请输入项目名称<不改动直接回车>：")
-	project-num  (getstring "请输入项目编号<不改动直接回车>：")
-  )
+;;;  (setq	project-name (getstring "请输入项目名称<不改动直接回车>：")
+;;;	project-num  (getstring "请输入项目编号<不改动直接回车>：")
+;;;  )
   (princ "请选择进行图号编辑的图纸框，建议以栏选方式（F）")
   (setq ss (ssget '((2 . "标题栏"))))	;ss是标题栏图快的选择集
   (setq ss-list (ssget2list-reverse-wc ss))
@@ -35,18 +37,18 @@
       )					; 获取”图号“这个属性的图元
       (strcat drawing-prefix (itoa-add0 drawing-no)) ; 图号值：前缀编号 自定义函数itoa-add0, 对个位数前导补0
     )
-    (if	(not (= "" project-name))	; 修改项目名称 第5个属性
-      (vla-put-TextString (nth 4 biaotilan-attr) project-name)
-    )
-    (if	(not (= "" project-num))	;修改项目编号 第6个属性
-      (vla-put-TextString (nth 5 biaotilan-attr) project-num)
-    )
+;;;    (if	(not (= "" project-name))	; 修改项目名称 第5个属性
+;;;      (vla-put-TextString (nth 4 biaotilan-attr) project-name)
+;;;    )
+;;;    (if	(not (= "" project-num))	;修改项目编号 第6个属性
+;;;      (vla-put-TextString (nth 5 biaotilan-attr) project-num)
+;;;    )
     (setq num (1+ num)
 	  drawing-no
 	   (1+ drawing-no)
     )
   )
-;;;  (setvar "osmode" osmode)		;恢复捕获设置
+
   (princ (strcat "一共编辑了" (rtos num) "个标题栏。"))
   (princ)
 )
@@ -65,7 +67,7 @@
   ;;如果选择集第一个图元是以窗口w或交叉c方式被选中
   ;;则默认整个选择集都是以此种方式被选中
   ;;则倒转此选择集内的图元次序, 否则不倒转
-  ;;窗口w或交叉c方式下, 第一个图元位于右下角,
+  ;;窗口w或交叉c方式下, 第一个图元位于右下角, 违背直觉
   (setq num 0
         ss-list nil)
   (repeat (sslength ss)
