@@ -79,6 +79,14 @@
     ss-list
     (reverse ss-list)))
   
+;;;获取块的插入点X坐标 使用 vl-sort 排序
+;;;(car
+;;;  (vlax-safearray->list
+;;;    (vlax-variant-value
+;;;    (vlax-get-property
+;;;      (vlax-ename->vla-object (car (entsel)) ) 'InsertionPoint))))
+
+
 
 
 
