@@ -1,15 +1,14 @@
 ;;;在模型空间画出图幅框，并设置字体和标注样式
 ;;;只需给出图幅框的两个对角点，自动求出比例因子
 ;;;支持A4横幅、竖幅和A3横幅的图幅框
-;;;Version: 2.5
-;;;修改时间：2015/11/23
-;;;作者：kangdalei#gmail.com
+
+
 
 
 
 (defun c:tu-fu-kuang  (/ p1 p2 lenth width p0 l/w osmode)
   (setq osmode (getvar "osmode"))       ;保存捕获设置
-  (setvar "osmode" 0)                   ;取消捕获
+  (setvar "osmode" 32)                  ;设置交点捕获
   (setvar "ATTDIA" 0) 设置系统变量为0，插入块时命令行输入属性
   (princ "给出图幅框的两个对角点：")
   (setq p1    (getpoint "\n第一点：")   ;图幅框第一点
