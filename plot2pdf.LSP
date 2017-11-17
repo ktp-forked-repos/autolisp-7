@@ -1,6 +1,7 @@
-;;;批量将图框paper-a4x paper-a4y paper-a3 范围内打印成pdf图纸
+;;;批量将模型空间或图纸空间的图框paper-a4x paper-a4y paper-a3 范围内打印成pdf图纸
 ;;;2017.11.09 ok!
 ;;;2017.11.10 refactor
+;;;2017.11.17 for used in paper-space
 (defun c:p2p  (/	    osmode	 ss	      ss-name
 	       scale	    paper-min-max	      paper-min
 	       paper-max    num		 insert-name  draw-paper-name)
@@ -104,48 +105,84 @@
 					;获取打印范围右上框点
 	       ))
 	((= paper "paper-a3x")
-	 (setq p-l	   "l" ;横幅打印
+	 (setq p-l	   "l"		;横幅打印
 	       paper-z	   "ISO full bleed A3 (420.00 x 297.00 毫米)"
 	       transpose   "n"
 	       plot-offset "25,5"
 	       plot-min	   (mapcar '+ paper-min (list (* scale 25) (* scale 5)))
 					;获取打印范围左下框点
-	       plot-max	   (mapcar '+
-				   paper-max
-				   (list (* scale -5) (* scale -5)))
+	       plot-max	   (mapcar '+ paper-max (list (* scale -5) (* scale -5)))
 					;获取打印范围右上框点
 	       )))			;确定图纸纵向还是横向打印
   (setvar "cmdecho" 0)
-  (command "plot"
-	   "y"				;详细配置
-	   ""				;默认模型空间
-	   "dwg to pdf"			;打印机名称
-	   paper-z			;纸张类型
-	   "m"				;毫米单位
-	   p-l				;打印方向
-	   transpose			;上下颠倒打印
-	   "W"				;窗口模式
-	   plot-min
-	   plot-max
-	   (strcat "1:" (rtos scale 2))	;打印比例
-	   plot-offset			;打印偏移
-	   ""				;默认是否按样式打印
-	   "."				;默认打印样式表 .表示无
-	   ""				;默认是否打印线宽
-	   ""				;默认着色打印设置
-	   (strcat (getvar "DWGPREFIX")	;当前文档路径
-		   (strcat pdf-filename	;图名
-			   "_"
-			   ;(substr (getvar "DWGNAME") 1 3)
+  (if (= 1
+	 (vla-get-ActiveSpace
+	   (vla-get-ActiveDocument (vlax-get-acad-object))))
+					; 判断当前活动空间 1模型空间 0 图纸空间
+    (command
+      "plot"
+      "y"				;详细配置
+      ""				;默认模型空间
+      "dwg to pdf"			;打印机名称
+      paper-z				;纸张类型
+      "m"				;毫米单位
+      p-l				;打印方向
+      transpose				;上下颠倒打印
+      "W"				;窗口模式
+      plot-min
+      plot-max
+      (strcat "1:" (rtos scale 2))	;打印比例
+      plot-offset			;打印偏移
+      ""				;默认是否按样式打印
+      "."				;默认打印样式表 .表示无
+      ""				;默认是否打印线宽
+      ""				;默认着色打印设置
+      (strcat
+	(getvar "DWGPREFIX")		;当前文档路径
+	(strcat	pdf-filename		;图名
+		"_"			;(substr (getvar "DWGNAME") 1 3)
 					;CAD文档名前3个字符，如果是中文会乱码
-			   (car (regex-extract "^.{3}" (getvar "DWGNAME") "ig"))
-;使用了正则表达式提取文档名前3个字符，可以处理中文
-			   "_"
-			   (substr (rtos (getvar "cdate") 2 6) 5 4)))
+		(car (regex-extract "^.{3}" (getvar "DWGNAME") "ig"))
+					;使用了正则表达式提取文档名前3个字符，可以处理中文
+		"_"
+		(substr (rtos (getvar "cdate") 2 6) 5 4)))
 					;输出的pdf文件名:图名-CAD文件名前3位-生成日期时间
-	   "n"				;默认是否保存对页面设置的修改
-	   "y"				;是否继续打印
-	   ))
+      "n"				;默认是否保存对页面设置的修改
+      "y"				;是否继续打印
+      )
+    (command
+      "plot"
+      "y"				;详细配置
+      ""				;默认图纸空间
+      "dwg to pdf"			;打印机名称
+      paper-z				;纸张类型
+      "m"				;毫米单位
+      p-l				;打印方向
+      transpose				;上下颠倒打印
+      "W"				;窗口模式
+      plot-min
+      plot-max
+      (strcat "1:" (rtos scale 2))	;打印比例
+      plot-offset			;打印偏移
+      ""				;默认是否按样式打印
+      "."				;默认打印样式表 .表示无
+      "y"				;是否打印线宽
+      "n"				;是否按打印比例缩放线宽
+      "n"				; 是否先打印图纸空间
+      "n"				; 是否隐藏图纸空间对象
+      (strcat
+	(getvar "DWGPREFIX")		;当前文档路径
+	(strcat	pdf-filename		;图名
+		"_"			;(substr (getvar "DWGNAME") 1 3)
+					;CAD文档名前3个字符，如果是中文会乱码
+		(car (regex-extract "^.{3}" (getvar "DWGNAME") "ig"))
+					;使用了正则表达式提取文档名前3个字符，可以处理中文
+		"_"
+		(substr (rtos (getvar "cdate") 2 6) 5 4)))
+					;输出的pdf文件名:图名-CAD文件名前3位-生成日期时间
+      "n"				;默认是否保存对页面设置的修改
+      "y"				;是否继续打印
+      )))
 
 
 (defun get-biaotilan-attr-papername
@@ -170,10 +207,10 @@
 			       block-attr-list)
 			  'TextString))
   (if (/= paper-num "图号")		;如果有特定图号,返回 图号-图名,否则单独返回 图名
-    (strcat paper-num "#" paper-name)   ;使用#分割图号 图名
+    (strcat paper-num "#" paper-name)	;使用#分割图号 图名
     paper-name))
 
-(defun regex-extract (pat str key / regex S tmp str1)
+(defun regex-extract  (pat str key / regex S tmp str1)
   ;; 提取正则表达式匹配到的内容
   ;; pat 正则表达式 str 字符串 
   ;; pat 中 \ 使用 \\
@@ -181,29 +218,26 @@
   ;; 注意：一般使用全局匹配 g
   ;; 可组合使用或单独使用 或置空 ""
   (vl-load-com)
-  (setq regex (vlax-create-object "Vbscript.RegExp")) ;引用正则表达式控件
+  (setq regex (vlax-create-object "Vbscript.RegExp"))
+					;引用正则表达式控件
   (if (wcmatch key "*i*,*I*")
     (vlax-put-property regex "IgnoreCase" 1) ;忽略大小写
     (vlax-put-property regex "IgnoreCase" 0) ;不忽略大小写
     )
   (if (wcmatch key "*g*,*G*")
     (vlax-put-property regex "Global" 1) ;匹配方式，全文字匹配
-    (vlax-put-property regex "Global" 0)
-    )
+    (vlax-put-property regex "Global" 0))
   (if (wcmatch key "*m*,*M*")
     (vlax-put-property regex "Multiline" 1) ;多行模式
-    (vlax-put-property regex "Multiline" 0)
-    )
+    (vlax-put-property regex "Multiline" 0))
   (vlax-put-property regex "Pattern" pat)
   (setq s (vlax-invoke-method regex "Execute" str))
   ;;将规则运用到STR字符，得到提取出的文字内容
-  (VLAX-FOR tmp s                       ;遍历集合对象
-    (setq str1 (cons (vlax-get-property tmp "value") str1))
-    )
+  (VLAX-FOR tmp	 s			;遍历集合对象
+    (setq str1 (cons (vlax-get-property tmp "value") str1)))
   ;;将内容转换为LISP语言就可以直接观察了
   (vlax-release-object regex)
-  (REVERSE str1)
-  )
+  (REVERSE str1))
 
 
 
