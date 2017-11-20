@@ -2,6 +2,7 @@
 ;;;2017.11.09 ok!
 ;;;2017.11.10 refactor
 ;;;2017.11.17 for used in paper-space
+;;;2017.11.20 打印的pdf文件名增加产品数量构成
 (defun c:p2p  (/	    osmode	 ss	      ss-name
 	       scale	    paper-min-max	      paper-min
 	       paper-max    num		 insert-name  draw-paper-name)
@@ -185,8 +186,11 @@
       )))
 
 
-(defun get-biaotilan-attr-papername
-       (paper-min paper-max / ss block-attr-list paper-name paper-num)
+(defun get-biaotilan-attr-papername  (paper-min	     paper-max
+				      /		     ss
+				      block-attr-list
+				      paper-name     paper-num
+				      product-num)
   ;;给定图幅框范围paper-min paper-max
   ;;返回图幅框范围内标题栏块的属性"图号"-"图名"的值
   ;;图名为 PDF文件的文件名组成部分
@@ -205,10 +209,19 @@
 	paper-num	(vlax-get-property ;paper-num 图号
 			  (nth 3	;图号是标题栏的第4个属性
 			       block-attr-list)
+			  'TextString)
+	product-num	(vlax-get-property ;paper-num 图号
+			  (nth 1	;数量是标题栏的第2个属性
+			       block-attr-list)
 			  'TextString))
-  (if (/= paper-num "图号")		;如果有特定图号,返回 图号-图名,否则单独返回 图名
-    (strcat paper-num "#" paper-name)	;使用#分割图号 图名
+  (if (/= paper-num "图号")		;如果有特定图号,返回 图号#图名
+    (setq paper-name (strcat paper-num "#" paper-name))
+					;使用#分割图号 图名
+    )
+  (if (regex-test "^\\d+$" product-num "ig") ;如果数量有值
+    (strcat paper-name "_N" product-num) ; 名称后加 _N
     paper-name))
+
 
 (defun regex-extract  (pat str key / regex S tmp str1)
   ;; 提取正则表达式匹配到的内容
@@ -240,6 +253,33 @@
   (REVERSE str1))
 
 
+(defun regex-test  (pat str key / regex test)
+  ;; 测试字符串str是否存在字串符合正则表达式模式pat
+  ;; pat 正则表达式 str 字符串 
+  ;; pat 中 \ 使用 \\
+  ;; key "igm" i(Ignorecase)忽略大小写 g (Global)全局匹配 m (Multili) 多行模式
+  ;; 注意：一般使用全局匹配 g
+  ;; 可组合使用或单独使用 或置空 ""
+  (vl-load-com)
+  (setq regex (vlax-create-object "Vbscript.RegExp"))
+					;引用正则表达式控件
+  (if (wcmatch key "*i*,*I*")
+    (vlax-put-property regex "IgnoreCase" 1) ;忽略大小写
+    (vlax-put-property regex "IgnoreCase" 0) ;不忽略大小写
+    )
+  (if (wcmatch key "*g*,*G*")
+    (vlax-put-property regex "Global" 1) ;匹配方式，全文字匹配
+    (vlax-put-property regex "Global" 0))
+  (if (wcmatch key "*m*,*M*")
+    (vlax-put-property regex "Multiline" 1) ;多行模式
+    (vlax-put-property regex "Multiline" 0))
+  (vlax-put-property regex "Pattern" pat)
+  (setq	test
+	 (if (eq (vlax-invoke-method regex "test" str) :vlax-true)
+	   t
+	   nil))
+  (vlax-release-object regex)
+  test)
 
 
 
