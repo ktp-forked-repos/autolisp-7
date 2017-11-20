@@ -1,2 +1,2 @@
 (defun c:sd ()
-  (setvar "osmode" 167))
+  (setvar "osmode" 183))
