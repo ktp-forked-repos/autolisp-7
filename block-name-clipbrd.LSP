@@ -6,7 +6,7 @@
   (setq block-name (vlax-get-property
       (vlax-ename->vla-object (car (entsel "选取块，块名复制到剪贴板: ")))
       'effectivename))
-  (dos_clipboard 屋架杆)
+  (dos_clipboard block-name)
   (princ "\n")
   (princ (strcat "'" block-name "'已复制到系统剪贴板"))
   (princ))
