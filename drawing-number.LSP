@@ -79,7 +79,7 @@
        (cadadr en2-double-point)))      ; en2-double-point右上y坐标
   (defun left  (en1-double-point en2-double-point) ;en1在en2左方
     (< (caadr en1-double-point)         ;右上x坐标
-       (caar en1-double-point)))        ; 左下x坐标
+       (caar en2-double-point)))        ; 左下x坐标
   (or (up en1-double-point en2-double-point) ; en1在en2上方
       (and (not (up en2-double-point en1-double-point))
                                         ;en2不在en1上方,即en1 en2同行
